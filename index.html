@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chanakya | Professional Academic & Cohort OS</title>
+
+  <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Top App Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      
+      <!-- Brand & Identity -->
+      <div class="nav-brand">
+        <div class="brand-logo-wrap">
+          <img 
+            src="https://lh3.googleusercontent.com/d/1ytfup2H5mKQi2VIWaJXErJNpb3UuH0fb" 
+            alt="Logo" 
+            class="brand-logo"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+            referrerpolicy="no-referrer"
+          />
+          <div class="brand-fallback-icon" style="display:none;">CK</div>
+        </div>
+        <div class="brand-text">
+          <div class="brand-title">
+            Chanakya <span class="brand-badge">Cohort OS</span>
+          </div>
+          <div class="brand-subtitle">Academic & Engineering Workspace</div>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="nav-tabs">
+        <button class="nav-tab active" data-tab="tab-overview" onclick="switchTab('tab-overview')">
+          <svg class="tab-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          Overview
+        </button>
+        <button class="nav-tab" data-tab="tab-progress" onclick="switchTab('tab-progress')">
+          <svg class="tab-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          Daily Progress
+        </button>
+        <button class="nav-tab" data-tab="tab-calendar" onclick="switchTab('tab-calendar')">
+          <svg class="tab-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          Calendar & Exams
+        </button>
+        <button class="nav-tab" data-tab="tab-milestones" onclick="switchTab('tab-milestones')">
+          <svg class="tab-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+          Milestones
+        </button>
+        <button class="nav-tab" data-tab="tab-analytics" onclick="switchTab('tab-analytics')">
+          <svg class="tab-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          Analytics
+        </button>
+        <button class="nav-tab" data-tab="tab-team" onclick="switchTab('tab-team')">
+          <svg class="tab-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          Team
+        </button>
+      </nav>
+
+      <!-- Member Switcher & Primary Action -->
+      <div class="nav-actions">
+        <div class="member-dropdown-wrap">
+          <span class="member-label">Viewing as:</span>
+          <select id="activeMemberDropdown" class="member-select" onchange="switchActiveMember(this.value)">
+            <!-- Populated via JS -->
+          </select>
+        </div>
+
+        <button class="btn btn-primary" onclick="openStandupModal()">
+          <span class="btn-icon">+</span> Log Standup
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Strategic Principle Strip -->
+  <section class="banner-strip">
+    <div class="banner-container">
+      <span class="banner-pill">Strategic Principle</span>
+      <p class="banner-text" id="quoteDisplay">"A man is great by deeds, not by birth." - Chanakya</p>
+      <button class="banner-refresh" onclick="rotateQuote()" title="Next Principle">Refresh</button>
+    </div>
+  </section>
+
+  <!-- Main View Container -->
+  <main class="main-content">
+
+    <!-- ==================== TAB 1: OVERVIEW ==================== -->
+    <div id="tab-overview" class="view-panel active">
+      
+      <div class="welcome-bar">
+        <div>
+          <h1 class="welcome-heading">Welcome back, <span id="welcomeUserName">Teammate</span></h1>
+          <p class="welcome-sub">Private local workspace. Review your study consistency, schedule, and immediate focus areas.</p>
+        </div>
+        <div class="welcome-date" id="liveDateDisplay"></div>
+      </div>
+
+      <!-- KPI Metrics -->
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-label">Active Momentum Streak</div>
+          <div class="kpi-num" id="statStreak">0 <span class="kpi-unit">days</span></div>
+          <div class="kpi-meta" id="statStreakLabel">Pending today's check-in</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label">Total Time Invested</div>
+          <div class="kpi-num" id="statTotalHours">0.0 <span class="kpi-unit">hrs</span></div>
+          <div class="kpi-meta" id="statWeeklyHours">Past 7 days: 0.0 hrs</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label">Energy & Focus Rating</div>
+          <div class="kpi-num" id="statFlowRating">-- <span class="kpi-unit">/ 5.0</span></div>
+          <div class="kpi-meta">Personal focus average</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label">Scheduled Works & Exams</div>
+          <div class="kpi-num" id="statPendingEvents">0</div>
+          <div class="kpi-meta" id="statEventsMeta">Upcoming on the calendar</div>
+        </div>
+      </div>
+
+      <!-- Overview Split: Standup Status & Upcoming Agenda -->
+      <div class="dashboard-grid">
+        
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">Daily Standup Status</h2>
+              <p class="card-subtitle">Today's recorded check-ins across your cohort</p>
+            </div>
+            <button class="btn btn-sm btn-outline" onclick="switchTab('tab-progress')">View Standups &rarr;</button>
+          </div>
+          <div class="cohort-status-list" id="todayCohortStatusList"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">Upcoming Agenda & Exams</h2>
+              <p class="card-subtitle">Next test dates, project submissions, and priorities</p>
+            </div>
+            <button class="btn btn-sm btn-outline" onclick="openEventModal()">+ Add Event</button>
+          </div>
+          <div class="upcoming-events-list" id="upcomingEventsList"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ==================== TAB 2: DAILY PROGRESS ==================== -->
+    <div id="tab-progress" class="view-panel">
+      
+      <div class="section-header">
+        <div>
+          <h1 class="view-title">Daily Progress Log</h1>
+          <p class="view-subtitle">Review accomplishments, blockers, solutions, and continuous improvement micro-habits.</p>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">Filter:</span>
+          <div class="filter-chips" id="progressFilterChips">
+            <button class="chip active" onclick="filterProgressFeed('all')">All Cohort</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="feed-container" id="standupFeedContainer"></div>
+
+    </div>
+
+    <!-- ==================== TAB 3: CALENDAR & EXAMS ==================== -->
+    <div id="tab-calendar" class="view-panel">
+      
+      <div class="section-header">
+        <div>
+          <h1 class="view-title">Cohort Calendar & Exam Scheduler</h1>
+          <p class="view-subtitle">Coordinate exams, tests, project deliverables, and deadlines in one place.</p>
+        </div>
+        <button class="btn btn-primary" onclick="openEventModal()">
+          <span class="btn-icon">+</span> Add Exam / Work
+        </button>
+      </div>
+
+      <div class="calendar-workspace">
+        
+        <div class="card calendar-card">
+          <div class="cal-nav-bar">
+            <h2 class="cal-month-title" id="calendarMonthTitle">Month Year</h2>
+            <div class="cal-nav-buttons">
+              <button class="btn btn-sm btn-outline" onclick="navigateMonth(-1)">&larr; Prev</button>
+              <button class="btn btn-sm btn-outline" onclick="jumpToCurrentMonth()">Today</button>
+              <button class="btn btn-sm btn-outline" onclick="navigateMonth(1)">Next &rarr;</button>
+            </div>
+          </div>
+
+          <div class="cal-legend-bar">
+            <span class="legend-badge"><span class="legend-dot dot-exam"></span> Exam / Test</span>
+            <span class="legend-badge"><span class="legend-dot dot-deadline"></span> Hard Deadline</span>
+            <span class="legend-badge"><span class="legend-dot dot-work"></span> Project Work</span>
+            <span class="legend-badge"><span class="legend-dot dot-standup"></span> Standup Logged</span>
+          </div>
+
+          <div class="cal-weekdays-row">
+            <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+          </div>
+
+          <div class="cal-days-grid" id="calendarDaysGrid"></div>
+        </div>
+
+        <!-- Selected Day Agenda -->
+        <div class="card agenda-card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title" id="selectedDateHeader">Selected Date</h3>
+              <p class="card-subtitle">Exams, tasks, and standups for this day</p>
+            </div>
+            <button class="btn btn-sm btn-outline" onclick="openEventModal()">+ Add</button>
+          </div>
+          <div class="agenda-scroll-body" id="selectedDateAgendaBody"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ==================== TAB 4: MILESTONES & ROADMAP ==================== -->
+    <div id="tab-milestones" class="view-panel">
+      
+      <div class="section-header">
+        <div>
+          <h1 class="view-title">Milestone Roadmap</h1>
+          <p class="view-subtitle">Semester engineering targets, research manuscripts, and syllabus progress.</p>
+        </div>
+        <button class="btn btn-primary" onclick="openMilestoneModal()">
+          <span class="btn-icon">+</span> Add Milestone
+        </button>
+      </div>
+
+      <div class="milestones-grid" id="milestonesContainer"></div>
+
+    </div>
+
+    <!-- ==================== TAB 5: ANALYTICS & PDF ==================== -->
+    <div id="tab-analytics" class="view-panel">
+      
+      <div class="section-header">
+        <div>
+          <h1 class="view-title">Work & Study Velocity Analytics</h1>
+          <p class="view-subtitle">Direct, non-competitive metrics evaluating hours invested and domain distribution.</p>
+        </div>
+        <button class="btn btn-secondary" onclick="generatePdfReport()">
+          <span class="btn-icon">&#128196;</span> Export PDF Dossier
+        </button>
+      </div>
+
+      <div class="analytics-layout">
+        
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">Weekly Output Velocity</h3>
+              <p class="card-subtitle">Hours logged over the past 7 days per member</p>
+            </div>
+          </div>
+          <div class="chart-canvas-box" id="velocityChartWrapper">
+            <canvas id="velocityChart"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">Subject & Module Allocation</h3>
+              <p class="card-subtitle">Effort distribution across technical domains</p>
+            </div>
+          </div>
+          <div class="chart-canvas-box doughnut-box" id="domainChartWrapper">
+            <canvas id="domainChart"></canvas>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ==================== TAB 6: TEAM DIRECTORY ==================== -->
+    <div id="tab-team" class="view-panel">
+      
+      <div class="section-header">
+        <div>
+          <h1 class="view-title">Team Directory</h1>
+          <p class="view-subtitle">Manage enrolled cohort teammates, departments, and individual metrics.</p>
+        </div>
+        <button class="btn btn-primary" onclick="openMemberModal()">
+          <span class="btn-icon">+</span> Enroll Member
+        </button>
+      </div>
+
+      <div class="team-grid" id="teamCardsContainer"></div>
+
+    </div>
+
+  </main>
+
+  <!-- ==================== MODALS ==================== -->
+
+  <!-- Modal 1: Daily Standup Entry -->
+  <div class="modal-backdrop" id="standupModal">
+    <div class="modal-box modal-wide">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title">Log Daily Standup</h2>
+          <p class="modal-subtitle">Document today's engineering tasks, tomorrow's pledge, and friction points</p>
+        </div>
+        <button class="modal-close" onclick="closeStandupModal()">&times;</button>
+      </div>
+
+      <form id="standupForm" onsubmit="submitStandup(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Teammate</label>
+            <select id="logMemberSelect" required></select>
+          </div>
+          <div class="form-group">
+            <label>Date</label>
+            <input type="date" id="logDateInput" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <div class="slider-label-row">
+              <label>Time Dedicated</label>
+              <span class="slider-badge" id="sliderValueText">3.5 hrs</span>
+            </div>
+            <input type="range" id="logHoursSlider" min="0.5" max="16" step="0.5" value="3.5" oninput="updateSliderText(this.value)" />
+          </div>
+
+          <div class="form-group">
+            <label>Domain / Module</label>
+            <select id="logDomainSelect" required>
+             <option value="VLSI & Digital Logic">VLSI & Digital Logic (Verilog/FPGA)</option>
+              <option value="Exam Preparation">Exam Preparation</option>
+              <option value="Programming Language">Programming Languages</option>
+              <option value="GATE / CAT">GATE / CAT</option>
+              <option value="AI & ML ">AI & ML </option>
+              <option value="Software Tool Exposure">Software Tool Exposure</option>
+              <option value="Core B.Tech Academics">Core Engineering & Academics</option>
+              <option value="Aptitude & Competitive Exams">GATE / CAT / Placement Preparation</option>
+              <option value="Project">Project</option>
+              <option value="Other Workspace">Other Works</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>What did you accomplish today? <span class="req">*</span></label>
+          <textarea id="logDoneText" rows="3" placeholder="Specific problems solved, RTL written, modules verified, or lecture topics covered..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Tomorrow's Single Most Critical Target <span class="req">*</span></label>
+          <input type="text" id="logTargetText" placeholder="Specific deliverable or chapter for tomorrow..." required />
+        </div>
+
+        <div class="form-group">
+          <label>Energy & Focus Quality</label>
+          <div class="energy-options">
+            <label class="energy-pill">
+              <input type="radio" name="energyVal" value="1" />
+              <span>1 - Low</span>
+            </label>
+            <label class="energy-pill">
+              <input type="radio" name="energyVal" value="2" />
+              <span>2 - Sluggish</span>
+            </label>
+            <label class="energy-pill">
+              <input type="radio" name="energyVal" value="3" />
+              <span>3 - Moderate</span>
+            </label>
+            <label class="energy-pill">
+              <input type="radio" name="energyVal" value="4" checked />
+              <span>4 - High Focus</span>
+            </label>
+            <label class="energy-pill">
+              <input type="radio" name="energyVal" value="5" />
+              <span>5 - Deep Flow</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Blocker or Problem (Optional)</label>
+            <input type="text" id="logBlockerInput" placeholder="Synthesis issue, math derivation question, etc." />
+          </div>
+          <div class="form-group">
+            <label>1% Improvement Micro-Habit</label>
+            <input type="text" id="logImprovementInput" placeholder="One daily habit to do 1% better tomorrow..." />
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeStandupModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Publish Standup</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 2: Schedule Work / Exam -->
+  <div class="modal-backdrop" id="eventModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title">Schedule Exam or Work</h2>
+          <p class="modal-subtitle">Add tests, assignment submissions, or project milestones to the calendar</p>
+        </div>
+        <button class="modal-close" onclick="closeEventModal()">&times;</button>
+      </div>
+
+      <form id="eventForm" onsubmit="submitEvent(event)">
+        <div class="form-group">
+          <label>Title / Description <span class="req">*</span></label>
+          <input type="text" id="eventTitleInput" placeholder="e.g. Mid-Term Exam: Digital System Design" required />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Date <span class="req">*</span></label>
+            <input type="date" id="eventDateInput" required />
+          </div>
+          <div class="form-group">
+            <label>Priority</label>
+            <select id="eventPrioritySelect">
+              <option value="high">High / Urgent</option>
+              <option value="medium" selected>Medium</option>
+              <option value="normal">Standard</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Category <span class="req">*</span></label>
+          <div class="category-radio-row">
+            <label class="cat-pill">
+              <input type="radio" name="eventCategory" value="exam" checked />
+              <span>Exam / Test</span>
+            </label>
+            <label class="cat-pill">
+              <input type="radio" name="eventCategory" value="deadline" />
+              <span>Deadline</span>
+            </label>
+            <label class="cat-pill">
+              <input type="radio" name="eventCategory" value="work" />
+              <span>Project Work</span>
+            </label>
+            <label class="cat-pill">
+              <input type="radio" name="eventCategory" value="task" />
+              <span>Task</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Assigned Teammate</label>
+          <select id="eventMemberSelect">
+            <option value="cohort">Joint Cohort (All)</option>
+          </select>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeEventModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save to Calendar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 3: Milestone Creation -->
+  <div class="modal-backdrop" id="milestoneModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title">Create Milestone</h2>
+          <p class="modal-subtitle">Define an overarching syllabus benchmark or hardware deliverable</p>
+        </div>
+        <button class="modal-close" onclick="closeMilestoneModal()">&times;</button>
+      </div>
+
+      <form id="milestoneForm" onsubmit="submitMilestone(event)">
+        <div class="form-group">
+          <label>Milestone Title <span class="req">*</span></label>
+          <input type="text" id="msTitleInput" placeholder="e.g. Complete ASB Bus Controller RTL and Testbench" required />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Assigned Lead</label>
+            <select id="msOwnerSelect" required>
+              <option value="cohort">Joint Cohort</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Target Deadline</label>
+            <input type="date" id="msDateInput" required />
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeMilestoneModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Milestone</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 4: Enroll Teammate -->
+  <div class="modal-backdrop" id="memberModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title">Enroll Teammate</h2>
+          <p class="modal-subtitle">Add a friend or collaborator to your private study workspace</p>
+        </div>
+        <button class="modal-close" onclick="closeMemberModal()">&times;</button>
+      </div>
+
+      <form id="memberForm" onsubmit="submitMember(event)">
+        <div class="form-group">
+          <label>Full Name <span class="req">*</span></label>
+          <input type="text" id="newMemberName" placeholder="e.g. Rahul Sharma" required />
+        </div>
+
+        <div class="form-group">
+          <label>Branch / Track <span class="req">*</span></label>
+          <input type="text" id="newMemberDept" placeholder="e.g. B.Tech - CSE or BBA" required />
+        </div>
+
+        <div class="form-group">
+          <label>Badge Color Theme</label>
+          <div class="color-options">
+            <label><input type="radio" name="mColor" value="#0284c7" checked /><span class="color-dot" style="background:#0284c7;"></span></label>
+            <label><input type="radio" name="mColor" value="#7c3aed" /><span class="color-dot" style="background:#7c3aed;"></span></label>
+            <label><input type="radio" name="mColor" value="#059669" /><span class="color-dot" style="background:#059669;"></span></label>
+            <label><input type="radio" name="mColor" value="#d97706" /><span class="color-dot" style="background:#d97706;"></span></label>
+            <label><input type="radio" name="mColor" value="#db2777" /><span class="color-dot" style="background:#db2777;"></span></label>
+            <label><input type="radio" name="mColor" value="#4f46e5" /><span class="color-dot" style="background:#4f46e5;"></span></label>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeMemberModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Enroll Teammate</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Dedicated Printable PDF Report Container -->
+  <div id="printReportContainer" class="print-only"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
